@@ -12,6 +12,7 @@ class Container {
     Map<Class<?>, Class<?>> classToClass = new HashMap<>();
     List<Class<?>> visited = new ArrayList<>();
     Map<Class<?>, Object> addedProxyLazy = new HashMap<>();
+    Map<Method, Object> listeners = new HashMap<>();
     List<ApplicationEvent> publishedEvents = new ArrayList<>();
     Properties properties;
 
@@ -83,6 +84,7 @@ class Container {
         Method[] methods = classImpl.getDeclaredMethods();
         for (Method m : methods) {
             if (m.getAnnotation(EventListener.class) != null) {
+                listeners.put(m, inst);
                 for (ApplicationEvent event : publishedEvents) {
                     m.invoke(inst, event);
                 }
